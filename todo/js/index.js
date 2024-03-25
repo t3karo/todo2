@@ -65,7 +65,20 @@ const saveTask=async(task)=>{
         alert("Error saving task "+error.message)
     }
 }
-getTasks()
+const deleteTask = async (taskId) => {
+    try {
+        const response = await fetch(`${BACKEND_ROOT_URL}/delete/${taskId}`, {
+            method: 'DELETE'
+        });
+        if (!response.ok) {
+            throw new Error('Failed to delete task');
+        }
+    } catch (error) {
+        console.error('Error deleting task:', error);
+        alert('Failed to delete task');
+    }
+};
+
 input.addEventListener('keypress',(event)=>{
     if(event.key==='Enter'){
         event.preventDefault()
@@ -79,3 +92,4 @@ input.addEventListener('keypress',(event)=>{
     }
 }
 })
+getTasks()
