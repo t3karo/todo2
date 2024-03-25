@@ -10,46 +10,50 @@ class Todos{
 
     getTasks =async() => {
         return new Promise(async(resolve, reject)=>{
-            try{
-                const response= await fetch(this.#backend_url);
-                const json=await response.json();
-                this.#readJson(json);
-                resolve(this.#task)
-            }catch(error){
-                reject(error)
-            }
+           fetch(this.#backend_url)
+              .then(response=>response.json())
+                .then(data=>{
+                    this.#readJson(data)
+                    resolve(this.#task)
+                })
+                .catch(error=>{
+                    reject(error)
+                })
         })
     }
 
 addTask=async(text)=>{
     return new Promise(async(resolve,reject)=>{
-        try{
-        const json=JSON.stringify({description:text})
-        const response=await fetch(this.#backend_url+'/new',{
-            method:'POST',
-            headers:{'Content-Type':'application/json'},
-            body:json
-        })
-        const task=await response.json()
-        const newTask=this.#addToArray(task.id,text)
-        resolve(newTask)
-        }catch(error){
-            reject(error)
-        }
-    })
+       fetch(this.#backend_url+'/new',{
+           method:'POST',
+           headers:{'Content-Type':'application/json'},
+           body:JSON.stringify({description:text})
+       })
+         .then(response=>response.json())
+            .then(json=>{
+                const task=this.#addToArray(json.id,text)
+                resolve(task)
+            })  
+            .catch(error=>{
+                reject(error)
+            })
+
+    })  
 }
 
 removeTask=async(id)=>{
     return new Promise(async(resolve,reject)=>{
-        try{
-            const response=await fetch(this.#backend_url+'/delete/'+id,{
-            method:'delete'
+        fetch(this.#backend_url+'/delete/'+id,{
+            method:'DELETE'
         })
-            this.#removeFromArray(id)
-            resolve()
-        }catch(error){
-            reject(error)
-        }
+          .then(response=>response.json())
+            .then(json=>{
+                this.#removeFromArray(json.id)
+                resolve(json.id)
+            })
+            .catch(error=>{
+                reject(error)
+            })
     })
 }
 

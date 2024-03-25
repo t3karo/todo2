@@ -6,7 +6,7 @@ const todos=new Todos(BACKEND_ROOT_URL)
 const list =document.querySelector('ul')
 const input=document.querySelector('input')
 
-input.disabled=true
+input.disabled=false
 
 const renderTask=(task)=>{
     const li=document.createElement('li')
@@ -34,7 +34,7 @@ const renderLink = (li, id) => {
             // If successful, remove the task from the UI as well
             const li_to_remove = document.querySelector(`[data-key='${removed_id}']`)
             if (li_to_remove) {
-                list.removeChild(li_to_remove)
+                list.removeChild(li_to_remove);
             }
         }).catch((error) => {
             // Alert the user if there's an error
@@ -54,35 +54,19 @@ const getTasks=async()=>{
     })
 }
 
-/*const saveTask=async(task)=>{
+const saveTask=async(task)=>{
     try{
-        const json=JSON.stringify({description:task})
         const response=await fetch(BACKEND_ROOT_URL+'/new',{
-            method:'post',
-            headers:{
-                'Content-Type':'application/json'
-            },
-            body:json
+            method:'POST',
+            headers:{'Content-Type':'application/json'},
+            body:JSON.stringify({description:task})
         })
-        return response.json()
-    }catch(error){
-        alert("Error saving task "+error.message)
+        return response.json();
     }
-}*/
-/*const deleteTask = async (taskId) => {
-    try {
-        const response = await fetch(`${BACKEND_ROOT_URL}/delete/${taskId}`, {
-            method: 'DELETE'
-        });
-        if (!response.ok) {
-            throw new Error('Failed to delete task');
-        }
-    } catch (error) {
-        console.error('Error deleting task:', error);
-        alert('Failed to delete task');
-    }
-};*/
-
+    catch(error){
+        alert(error)
+    }   
+}
 
 input.addEventListener('keypress',(event)=>{
     if(event.key==='Enter'){
