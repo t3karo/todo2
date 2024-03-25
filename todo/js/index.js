@@ -6,15 +6,15 @@ const todos=new Todos(BACKEND_ROOT_URL)
 const list =document.querySelector('ul')
 const input=document.querySelector('input')
 
-input.disabled=false
+input.disabled=true
 
 const renderTask=(task)=>{
     const li=document.createElement('li')
     li.setAttribute('class','list-group-item')
     li.setAttribute('data-key',task.getId().toString())
-    li.innerHTML=task.getText()
-    renderSpan(li)
-    renderLink(li)
+    //li.innerHTML=task.getText()
+    renderSpan(li,task.getText())
+    renderLink(li,task.getId())
     list.append(li)
 }
 
@@ -23,24 +23,28 @@ const renderSpan=(li,text)=>{
     span.innerHTML=text
 }
 
-const renderLink=(li,id)=>{
-    const a=li.appendChild(document.createElement('a'))
-    a.innerHTML='<i class="bi bi-trash"></i>'
-    a.setAttribute('style','float:right')
-    a.addEventListener('click',(event)=>{
-        todos.removeTask(id).then((removed_id)=>{
-            const li_to_remove=document.querySelector(`li[data-key="${removed_id}"]`)
-            if (li_to_remove){
+const renderLink = (li, id) => {
+    // Create a new anchor element and append it to the list item
+    const a = li.appendChild(document.createElement('a'))
+    a.innerHTML = '<i class="bi bi-trash"></i>'
+    a.setAttribute('style','float: right')
+    a.addEventListener('click',(event) => {
+        // On click, attempt to remove the task from the backend
+        todos.removeTask(id).then((removed_id) => {
+            // If successful, remove the task from the UI as well
+            const li_to_remove = document.querySelector(`[data-key='${removed_id}']`)
+            if (li_to_remove) {
                 list.removeChild(li_to_remove)
             }
-        }).catch((error)=>{
+        }).catch((error) => {
+            // Alert the user if there's an error
             alert(error)
         })
     })
 }
 
 const getTasks=()=>{
-    todos.getTasks().then((tasks)=>{
+    todos.getTasks().then(tasks=>{
         tasks.forEach(task=>{
             renderTask(task)
         })
@@ -50,7 +54,7 @@ const getTasks=()=>{
     })
 }
 
-const saveTask=async(task)=>{
+/*const saveTask=async(task)=>{
     try{
         const json=JSON.stringify({description:task})
         const response=await fetch(BACKEND_ROOT_URL+'/new',{
@@ -64,8 +68,8 @@ const saveTask=async(task)=>{
     }catch(error){
         alert("Error saving task "+error.message)
     }
-}
-const deleteTask = async (taskId) => {
+}*/
+/*const deleteTask = async (taskId) => {
     try {
         const response = await fetch(`${BACKEND_ROOT_URL}/delete/${taskId}`, {
             method: 'DELETE'
@@ -77,15 +81,16 @@ const deleteTask = async (taskId) => {
         console.error('Error deleting task:', error);
         alert('Failed to delete task');
     }
-};
+};*/
+
 
 input.addEventListener('keypress',(event)=>{
     if(event.key==='Enter'){
         event.preventDefault()
         const task=input.value.trim()
         if (task!==''){
-            todos.addTask(task).then((json)=>{
-                renderTask(json)
+            todos.addTask(task).then((task)=>{
+                renderTask(task)
                 input.value=''
                 input.focus()
         })

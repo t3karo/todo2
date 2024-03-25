@@ -43,7 +43,7 @@ removeTask=(id)=>{
     return new Promise(async(resolve,reject)=>{
         try{
             const response=await fetch(this.#backend_url+'/delete/'+id,{
-            method:'DELETE'
+            method:'delete'
         })
             this.#removeFromArray(id)
             resolve()
