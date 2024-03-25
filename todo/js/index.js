@@ -43,9 +43,9 @@ const renderLink = (li, id) => {
     })
 }
 
-const getTasks=()=>{
-    todos.getTasks().then(tasks=>{
-        tasks.forEach(task=>{
+const getTasks=async()=>{
+    todos.getTasks().then((task)=>{
+        task.forEach(task=>{
             renderTask(task)
         })
         input.disabled=false

@@ -8,7 +8,7 @@ class Todos{
         this.#backend_url=url
     }
 
-    getTasks =() => {
+    getTasks =async() => {
         return new Promise(async(resolve, reject)=>{
             try{
                 const response= await fetch(this.#backend_url);
@@ -21,7 +21,7 @@ class Todos{
         })
     }
 
-addTask=(text)=>{
+addTask=async(text)=>{
     return new Promise(async(resolve,reject)=>{
         try{
         const json=JSON.stringify({description:text})
@@ -39,7 +39,7 @@ addTask=(text)=>{
     })
 }
 
-removeTask=(id)=>{
+removeTask=async(id)=>{
     return new Promise(async(resolve,reject)=>{
         try{
             const response=await fetch(this.#backend_url+'/delete/'+id,{
